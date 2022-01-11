@@ -69,13 +69,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Glumci)
             </td>
-            <!--
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdFilm">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdFilm">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdFilm">Delete</a>
+                <a asp-controller="Proekcijas" asp-action="Index" asp-route-id="@item.IdFilm">See Showtimes</a>
             </td>
-            -->
         </tr>
 }
     </tbody>
