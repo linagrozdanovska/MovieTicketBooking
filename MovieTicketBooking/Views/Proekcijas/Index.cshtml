@@ -49,9 +49,7 @@
                 @Html.DisplayFor(modelItem => item.IdSalaNavigation.Ime)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdProekcija">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdProekcija">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdProekcija">Delete</a>
+                <a asp-controller="SedisteZaProekcijas" asp-action="Index" asp-route-id="@item.IdProekcija">See Seats</a>
             </td>
         </tr>
 }

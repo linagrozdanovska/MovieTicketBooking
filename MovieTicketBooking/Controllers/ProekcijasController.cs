@@ -24,7 +24,7 @@ namespace MovieTicketBooking.Controllers
             var postgresContext = _context.Proekcijas
                 .Include(p => p.IdFilmNavigation)
                 .Include(p => p.IdSalaNavigation)
-                .Where(p => p.IdFilmNavigation.IdFilm == id);
+                .Where(p => p.IdFilm == id);
             return View(await postgresContext.ToListAsync());
         }
 

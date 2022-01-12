@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - MovieTicketBooking</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
 </head>
 <body>
     <header>
@@ -27,7 +28,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item ml-auto">
-                                <p class="m-0 text-secondary">Hello, @User.Identity.Name!</p>
+                                <a class="nav-link text-secondary">@User.Identity.Name</a>
                             </li>
                             <li>
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">Logout</a>
