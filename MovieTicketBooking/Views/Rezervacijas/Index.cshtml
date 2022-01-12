@@ -4,11 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>My Reservations</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,13 +16,16 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DatumIVreme)
+                @Html.DisplayNameFor(model => model.IdProekcijaNavigation.IdFilmNavigation.Naslov)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdKorisnikNavigation)
+                @Html.DisplayNameFor(model => model.IdProekcijaNavigation.Datum)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdProekcijaNavigation)
+                @Html.DisplayNameFor(model => model.IdProekcijaNavigation.Vreme)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdProekcijaNavigation.Tip)
             </th>
             <th></th>
         </tr>
@@ -40,20 +40,25 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DatumIVreme)
+                @Html.DisplayFor(modelItem => item.IdProekcijaNavigation.IdFilmNavigation.Naslov)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdKorisnikNavigation.Email)
+                @Html.DisplayFor(modelItem => item.IdProekcijaNavigation.Datum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdProekcijaNavigation.Vreme)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdProekcijaNavigation.Tip)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdRezervacija">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdRezervacija">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdRezervacija">Delete</a>
-            </td>
-        </tr>
+            @if (item.Status.Equals("pending"))
+            {
+                <td class="text-right col-4">
+                    <a asp-action="" asp-route-id="@item.IdRezervacija" class="btn btn-primary">Proceed To Payment</a>
+                    <a asp-action="" asp-route-id="@item.IdRezervacija" class="btn btn-danger">Cancel Reservation</a>
+                </td>
+            }
+            </tr>
 }
     </tbody>
 </table>

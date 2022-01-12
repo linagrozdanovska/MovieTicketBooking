@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -14,8 +15,10 @@ namespace MovieTicketBooking.Models
         }
 
         public int IdRezervacija { get; set; }
+        [Display(Name = "Seats")]
         public int BrojNaSedista { get; set; }
         public string Status { get; set; }
+        [Display(Name = "Date & Time")]
         public DateTime DatumIVreme { get; set; }
         public int IdProekcija { get; set; }
         public int IdKorisnik { get; set; }

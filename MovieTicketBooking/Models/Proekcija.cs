@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -14,8 +15,13 @@ namespace MovieTicketBooking.Models
         }
 
         public int IdProekcija { get; set; }
+        [Display(Name = "Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime Datum { get; set; }
+        [Display(Name = "Time")]
         public TimeSpan Vreme { get; set; }
+        [Display(Name = "Type")]
         public string Tip { get; set; }
         public int IdFilm { get; set; }
         public int IdSala { get; set; }

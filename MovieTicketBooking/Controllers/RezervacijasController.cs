@@ -26,6 +26,8 @@ namespace MovieTicketBooking.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MakeReservation(SelectedSeatsModel model)
         {
+            var Id = 0;
+
             if (model.SelectedSeats is not null && model.SelectedSeats.Length > 0)
             {
                 List<SedisteZaProekcija> selectedSeats = new List<SedisteZaProekcija>();
@@ -43,14 +45,16 @@ namespace MovieTicketBooking.Controllers
                     }
                 }
 
-                // var claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
                 int userId = int.Parse(User.Claims.ToList()[0].Value);
+                Id = userId;
+
+                DateTime date = DateTime.Now;
 
                 Rezervacija rezervacija = new Rezervacija
                 {
                     BrojNaSedista = selectedSeats.Count,
                     Status = "pending",
-                    DatumIVreme = DateTime.Now,
+                    DatumIVreme = date,
                     IdProekcija = model.IdProekcija,
                     IdKorisnik = userId
                 };
@@ -70,14 +74,18 @@ namespace MovieTicketBooking.Controllers
             {
                 return RedirectToAction("Index", "SedisteZaProekcijas", new { id = model.IdProekcija });
             }
-            // return RedirectToAction("Details");
-            return RedirectToAction("Index", "SedisteZaProekcijas", new { id = model.IdProekcija });
+
+            return RedirectToAction("Index", "Rezervacijas", new { id = Id });
         }
 
         // GET: Rezervacijas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
-            var postgresContext = _context.Rezervacijas.Include(r => r.IdKorisnikNavigation).Include(r => r.IdProekcijaNavigation);
+            var postgresContext = _context.Rezervacijas
+                .Include(r => r.IdKorisnikNavigation)
+                .Include(r => r.IdProekcijaNavigation)
+                .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
+                .Where(r => r.IdKorisnik == id);
             return View(await postgresContext.ToListAsync());
         }
 
