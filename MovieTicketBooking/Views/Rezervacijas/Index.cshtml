@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdProekcijaNavigation.IdFilmNavigation.Naslov)
+                Movie
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdProekcijaNavigation.Datum)
@@ -54,8 +54,8 @@
             @if (item.Status.Equals("pending"))
             {
                 <td class="text-right col-4">
-                    <a asp-action="" asp-route-id="@item.IdRezervacija" class="btn btn-primary">Proceed To Payment</a>
-                    <a asp-action="" asp-route-id="@item.IdRezervacija" class="btn btn-danger">Cancel Reservation</a>
+                    <a asp-action="Pay" asp-route-id="@item.IdRezervacija" class="btn btn-primary">Proceed To Payment</a>
+                    <a asp-action="Cancel" asp-route-id="@item.IdRezervacija" class="btn btn-danger">Cancel Reservation</a>
                 </td>
             }
             </tr>

@@ -26,11 +26,11 @@ namespace MovieTicketBooking.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MakeReservation(SelectedSeatsModel model)
         {
-            var Id = 0;
+            DateTime date = DateTime.Now;
+            List<SedisteZaProekcija> selectedSeats = new List<SedisteZaProekcija>();
 
             if (model.SelectedSeats is not null && model.SelectedSeats.Length > 0)
             {
-                List<SedisteZaProekcija> selectedSeats = new List<SedisteZaProekcija>();
                 var postgresContext = _context.SedisteZaProekcijas
                 .Include(s => s.IdProekcijaNavigation)
                 .Include(s => s.IdRezervacijaNavigation)
@@ -46,9 +46,6 @@ namespace MovieTicketBooking.Controllers
                 }
 
                 int userId = int.Parse(User.Claims.ToList()[0].Value);
-                Id = userId;
-
-                DateTime date = DateTime.Now;
 
                 Rezervacija rezervacija = new Rezervacija
                 {
@@ -62,20 +59,69 @@ namespace MovieTicketBooking.Controllers
                 _context.Add(rezervacija);
                 await _context.SaveChangesAsync();
 
-                foreach (var seat in selectedSeats)
-                {
-                    seat.Status = "pending";
-                    _context.Update(seat);
-                    await _context.SaveChangesAsync();
-                }
-
             }
             else
             {
                 return RedirectToAction("Index", "SedisteZaProekcijas", new { id = model.IdProekcija });
             }
 
-            return RedirectToAction("Index", "Rezervacijas", new { id = Id });
+            var res = _context.Rezervacijas
+                .Include(r => r.IdKorisnikNavigation)
+                .Include(r => r.IdProekcijaNavigation)
+                .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
+                .Where(r => r.DatumIVreme == date)
+                .FirstOrDefault();
+
+            foreach (var seat in selectedSeats)
+            {
+                seat.Status = "pending";
+                seat.IdRezervacija = res.IdRezervacija;
+                _context.Update(seat);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", "Rezervacijas", new { id =  res.IdRezervacija });
+        }
+
+        //Cancel
+        public async Task<IActionResult> Cancel(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var rezervacija = await _context.Rezervacijas
+                .Include(r => r.IdKorisnikNavigation)
+                .Include(r => r.IdProekcijaNavigation)
+                .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
+                .FirstOrDefaultAsync(m => m.IdRezervacija == id);
+
+            if (rezervacija == null)
+            {
+                return NotFound();
+            }
+
+            var postgresContext = _context.SedisteZaProekcijas
+               .Include(s => s.IdProekcijaNavigation)
+               .Include(s => s.IdRezervacijaNavigation)
+               .Where(s => s.IdRezervacija == id)
+               .OrderBy(p => p.IdSedisteZaProekcija);
+            var seats = await postgresContext.ToListAsync();
+
+            foreach (var seat in seats)
+            {
+                seat.Status = "available";
+                seat.IdRezervacija = null;
+                _context.Update(seat);
+                await _context.SaveChangesAsync();
+            }
+
+            rezervacija.Status = "cancelled";
+            _context.Update(rezervacija);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Rezervacijas", new { id = int.Parse(User.Claims.ToList()[0].Value) });
         }
 
         // GET: Rezervacijas
@@ -100,6 +146,7 @@ namespace MovieTicketBooking.Controllers
             var rezervacija = await _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
+                .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
                 .FirstOrDefaultAsync(m => m.IdRezervacija == id);
             if (rezervacija == null)
             {

@@ -44,7 +44,7 @@
                         }
                         @if (item.Status.Equals("reserved") || item.Status.Equals("pending"))
                         {
-                            <input type="checkbox" disabled />
+                            <input type="checkbox" class="unavailable" disabled />
                         }
                     </p>
                 </div>
@@ -67,7 +67,7 @@
             if (total >= 4) {
                 $('input[type=checkbox]:not(:checked)').attr('disabled', 'disabled');
             } else {
-                $('input[type=checkbox]').removeAttr('disabled')
+                $('input[type=checkbox]:not(.unavailable)').removeAttr('disabled')
             }
         });
     </script>
