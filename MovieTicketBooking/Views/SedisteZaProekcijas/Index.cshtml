@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MovieTicketBooking.Models.SedisteZaProekcija>
+﻿@model MovieTicketBooking.Models.SelectedSeatsModel
 
 @{
     ViewData["Title"] = "Index";
@@ -7,10 +7,10 @@
 <h1>Select seats:</h1>
 
 <div class="text-center w-50 mx-auto">
-    <form method="post" asp-controller="" asp-action="">
-        @for (int i = 0; i < Model.ToList().Count; i++)
+    <form method="post" asp-controller="Rezervacijas" asp-action="MakeReservation">
+        @for (int i = 0; i < Model.AllSeats.Count; i++)
         {
-            var item = Model.ToList()[i];
+            var item = Model.AllSeats[i];
             if (i % 4 == 0)
             {
                 @:<div class="row mb-3">
@@ -30,13 +30,19 @@
                                   <i class="fas fa-couch fa-2x text-danger"></i>
                               </p>
                           }
-
+                          @if (item.Status.Equals("pending"))
+                          {
+                              <p class="m-0">
+                                  <i class="fas fa-couch fa-2x text-warning"></i>
+                              </p>
+                          }
                           <p class="m-0">
                               @if (item.Status.Equals("available"))
                               {
-                                  <input type="checkbox" />
+                                  <input type="checkbox" name="SelectedSeats" value="@item.IdSedisteZaProekcija" />
+                                  <input type="hidden" name="IdProekcija" value="@item.IdProekcija" />
                               }
-                              @if (item.Status.Equals("reserved"))
+                              @if (item.Status.Equals("reserved") || item.Status.Equals("pending"))
                               {
                                   <input type="checkbox" disabled />
                               }
@@ -48,5 +54,8 @@
                 @:</div>
             }
         }
+        <div class="form-group">
+            <input type="submit" value="Reserve Seats" class="btn btn-primary" />
+        </div>
     </form>
 </div>

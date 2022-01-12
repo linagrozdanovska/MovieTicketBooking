@@ -26,7 +26,11 @@ namespace MovieTicketBooking.Controllers
                 .Include(s => s.IdRezervacijaNavigation)
                 .Where(p => p.IdProekcija == id)
                 .OrderBy(p => p.IdSedisteZaProekcija);
-            return View(await postgresContext.ToListAsync());
+            var allSeats = await postgresContext.ToListAsync();
+            return View(new SelectedSeatsModel
+            {
+                AllSeats = allSeats
+            });
         }
 
         // GET: SedisteZaProekcijas/Details/5
