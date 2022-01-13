@@ -28,7 +28,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Rezervacijas" asp-action="Index" asp-route-id=@int.Parse(User.Claims.ToList()[0].Value)>My Reservations</a>
                             </li>
                             <li class="nav-item ml-auto">
-                                <a class="nav-link text-secondary">@User.Identity.Name</a>
+                                <a class="nav-link text-secondary"><i class="fas fa-user mr-1"></i>@User.Identity.Name</a>
                             </li>
                             <li>
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">Logout</a>

@@ -24,9 +24,16 @@ namespace MovieTicketBooking.Controllers
             var postgresContext = _context.SedisteZaProekcijas
                 .Include(s => s.IdProekcijaNavigation)
                 .Include(s => s.IdRezervacijaNavigation)
+                .Include(s => s.IdProekcijaNavigation.IdFilmNavigation)
                 .Where(p => p.IdProekcija == id)
                 .OrderBy(p => p.IdSedisteZaProekcija);
             var allSeats = await postgresContext.ToListAsync();
+            var movie = "";
+            foreach (var s in allSeats)
+            {
+                movie = s.IdProekcijaNavigation.IdFilmNavigation.Naslov;
+            }
+            ViewData["Movie"] = movie;
             return View(new SelectedSeatsModel
             {
                 AllSeats = allSeats
