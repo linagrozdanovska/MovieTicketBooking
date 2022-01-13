@@ -27,6 +27,11 @@
         </form>
     </div>
 </div>
+<div class="row">
+    <div class="col">
+        <p>Don't have an account? <a asp-controller="Account" asp-action="Register">Register.</a>'</p>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

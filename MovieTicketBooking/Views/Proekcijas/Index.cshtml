@@ -46,7 +46,10 @@
                 @Html.DisplayFor(modelItem => item.IdSalaNavigation.Ime)
             </td>
             <td>
-                <a asp-controller="SedisteZaProekcijas" asp-action="Index" asp-route-id="@item.IdProekcija">See Seats</a>
+                @if (DateTime.Compare(item.Datum, DateTime.Now) >= 0)
+                {
+                    <a asp-controller="SedisteZaProekcijas" asp-action="Index" asp-route-id="@item.IdProekcija">Book Seats</a>
+                }
             </td>
         </tr>
 }

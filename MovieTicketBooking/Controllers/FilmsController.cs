@@ -23,7 +23,7 @@ namespace MovieTicketBooking.Controllers
         public async Task<IActionResult> Index()
         {
             RemoveStatusPending();
-            return View(await _context.Films.ToListAsync());
+            return View(await _context.Films.OrderByDescending(f => f.DatumNaIzdavanje).ToListAsync());
         }
 
         private async void RemoveStatusPending()
