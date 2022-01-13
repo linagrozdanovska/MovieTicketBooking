@@ -55,6 +55,12 @@ namespace MovieTicketBooking.Controllers
             ViewData["DatumIVreme"] = DateTime.Now;
             ViewData["IdRezervacija"] = rezervacija.IdRezervacija;
             ViewData["IdKorisnik"] = int.Parse(User.Claims.ToList()[0].Value);
+
+            ViewData["Seats"] = showtimeSeats.Count;
+            ViewData["Movie"] = rezervacija.IdProekcijaNavigation.IdFilmNavigation.Naslov;
+            ViewData["Date"] = rezervacija.IdProekcijaNavigation.Datum.Date;
+            ViewData["Time"] = rezervacija.IdProekcijaNavigation.Vreme;
+
             return View();
         }
 
@@ -250,3 +256,4 @@ namespace MovieTicketBooking.Controllers
         }
     }
 }
+

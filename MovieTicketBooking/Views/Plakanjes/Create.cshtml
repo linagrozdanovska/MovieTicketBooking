@@ -5,7 +5,7 @@
 }
 
 <h2>Payment</h2>
-
+<p class="lead">Reserving @ViewData["Seats"] seats for @ViewData["Movie"], @ViewData["Date"] @ViewData["Time"]</p>
 <p class="lead">Total: @ViewData["Suma"]MKD</p>
 
 <hr />
@@ -65,4 +65,10 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+<script type="text/javascript">
+        window.setTimeout(function() {
+                    window.location.href = '@Url.Action("Index", "Rezervacijas", new { id = int.Parse(User.Claims.ToList()[0].Value) })';
+        }, 600000);
+</script>
 }
