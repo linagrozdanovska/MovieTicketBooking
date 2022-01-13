@@ -72,24 +72,5 @@ namespace MovieTicketBooking.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        // remove?
-        // GET: Films/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var film = await _context.Films
-                .FirstOrDefaultAsync(m => m.IdFilm == id);
-            if (film == null)
-            {
-                return NotFound();
-            }
-
-            return View(film);
-        }
     }
 }
