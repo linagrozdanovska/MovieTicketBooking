@@ -166,14 +166,13 @@ namespace MovieTicketBooking.Controllers
                 .Include(r => r.IdProekcijaNavigation)
                 .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
                 .Where(r => r.Status.Equals("pending"));
-            var reservations = await postgresContext1.ToListAsync();
-
+            var reservations = postgresContext1.ToList();
 
             var postgresContext2 = _context.SedisteZaProekcijas
                 .Include(s => s.IdProekcijaNavigation)
                 .Include(s => s.IdRezervacijaNavigation)
                 .Where(s => s.Status.Equals("pending"));
-            var seats = await postgresContext2.ToListAsync();
+            var seats = postgresContext2.ToList();
 
 
             foreach (var r in reservations)

@@ -28,7 +28,8 @@ namespace MovieTicketBooking
         {
             services.AddDbContext<postgresContext>(options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("MyDB")));
+                    Configuration.GetConnectionString("MyDB")), ServiceLifetime.Transient);
+
             services.AddControllersWithViews();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
