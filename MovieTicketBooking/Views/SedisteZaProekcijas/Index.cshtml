@@ -4,61 +4,76 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Select seats:</h1>
-
-<div class="text-center w-50 mx-auto">
-    <form id="form" method="post" asp-controller="Rezervacijas" asp-action="MakeReservation">
-        @for (int i = 0; i < Model.AllSeats.Count; i++)
-        {
-            var item = Model.AllSeats[i];
-            if (i % 4 == 0)
+<h2>Seat Selection:</h2>
+<div class="row">
+    <div class="text-center col-6 mx-auto">
+        <form id="form" method="post" asp-controller="Rezervacijas" asp-action="MakeReservation">
+            @for (int i = 0; i < Model.AllSeats.Count; i++)
             {
-                @:<div class="row mb-3">
-                }
-                <div class="col-3">
-                    <p class="m-0 lead">@(i+1)</p>
+                var item = Model.AllSeats[i];
+                if (i % 4 == 0)
+                {
+                    @:<div class="row mb-1">
+                    }
+                    <div class="col-3">
+                        <p class="m-0 lead">@(i+1)</p>
 
-                    @if (item.Status.Equals("available"))
-                    {
-                        <p class="m-0">
-                            <i class="fas fa-couch fa-2x text-success"></i>
-                        </p>
-                    }
-                    @if (item.Status.Equals("reserved"))
-                    {
-                        <p class="m-0">
-                            <i class="fas fa-couch fa-2x text-danger"></i>
-                        </p>
-                    }
-                    @if (item.Status.Equals("pending"))
-                    {
-                        <p class="m-0">
-                            <i class="fas fa-couch fa-2x text-warning"></i>
-                        </p>
-                    }
-                    <p class="m-0">
                         @if (item.Status.Equals("available"))
                         {
-                            <input type="checkbox" name="SelectedSeats" value="@item.IdSedisteZaProekcija" />
-                            <input type="hidden" name="IdProekcija" value="@item.IdProekcija" />
+                            <p class="m-0">
+                                <i class="fas fa-couch fa-2x text-success"></i>
+                            </p>
                         }
-                        @if (item.Status.Equals("reserved") || item.Status.Equals("pending"))
+                        @if (item.Status.Equals("reserved"))
                         {
-                            <input type="checkbox" class="unavailable" disabled />
+                            <p class="m-0">
+                                <i class="fas fa-couch fa-2x text-danger"></i>
+                            </p>
                         }
-                    </p>
-                </div>
+                        @if (item.Status.Equals("pending"))
+                        {
+                            <p class="m-0">
+                                <i class="fas fa-couch fa-2x text-warning"></i>
+                            </p>
+                        }
+                        <p class="m-0">
+                            @if (item.Status.Equals("available"))
+                            {
+                                <input type="checkbox" name="SelectedSeats" value="@item.IdSedisteZaProekcija" />
+                                <input type="hidden" name="IdProekcija" value="@item.IdProekcija" />
+                            }
+                            @if (item.Status.Equals("reserved") || item.Status.Equals("pending"))
+                            {
+                                <input type="checkbox" class="unavailable" disabled />
+                            }
+                        </p>
+                    </div>
 
-                if ((i + 1) % 4 == 0)
-                {
-                @:</div>
+                    if ((i + 1) % 4 == 0)
+                    {
+                    @:</div>
+                }
             }
-        }
-        <div class="form-group">
-            <input type="submit" value="Reserve Seats" class="btn btn-primary" />
-        </div>
-    </form>
+            <div class="form-group mt-4">
+                <input type="submit" value="Reserve Seats" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3">
+        <p>
+            <i class="fas fa-couch fa-2x text-success"></i> - Available
+        </p>
+        <p>
+            <i class="fas fa-couch fa-2x text-warning"></i> - Pending
+        </p>
+        <p>
+            <i class="fas fa-couch fa-2x text-danger"></i> - Reserved
+        </p>
+        <p class="lead">You can select 1-4 seats.</p>
+    </div>
 </div>
+
 
 @section Scripts {
     <script>
