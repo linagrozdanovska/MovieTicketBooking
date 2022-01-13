@@ -4,10 +4,8 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Reservation</h4>
+    <h4>Reservation Details</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -41,14 +39,17 @@
             @Html.DisplayFor(model => model.IdProekcijaNavigation.Tip)
         </dd>
     </dl>
-    <div class="row mt-2">
-        <div class="col-sm-3">
-            <a asp-controller="Plakanjes" asp-action="Create" asp-route-id="@Model.IdRezervacija" class="btn btn-primary" style="width: 12rem;">Proceed To Payment</a>
+    @if (Model.Status.Equals("pending"))
+    {
+        <div class="row mt-2">
+            <div class="col-sm-3">
+                <a asp-controller="Plakanjes" asp-action="Create" asp-route-id="@Model.IdRezervacija" class="btn btn-primary" style="width: 12rem;">Proceed To Payment</a>
+            </div>
+            <div class="col-sm-3">
+                <a asp-action="Cancel" asp-route-id="@Model.IdRezervacija" class="btn btn-danger" style="width: 10rem;">Cancel Reservation</a>
+            </div>
         </div>
-        <div class="col-sm-3">
-            <a asp-action="Cancel" asp-route-id="@Model.IdRezervacija" class="btn btn-danger" style="width: 10rem;">Cancel Reservation</a>
-        </div>
-    </div>
+    }
     <div class="row mt-3">
         <a asp-action="Index" asp-route-id=@int.Parse(User.Claims.ToList()[0].Value) class="col-sm-3">See all reservations</a>
     </div>
