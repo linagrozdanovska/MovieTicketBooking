@@ -60,7 +60,7 @@
 </div>
 
 <div>
-    <a asp-controller="Rezervacijas" asp-action="Index">Back To Reservations</a>
+    <a asp-controller="Rezervacijas" asp-action="Index" asp-route-id="new { id = int.Parse(User.Claims.ToList()[0].Value)}">Back To Reservations</a>
 </div>
 
 @section Scripts {
