@@ -127,6 +127,7 @@ namespace MovieTicketBooking.Controllers
         // GET: Rezervacijas
         public async Task<IActionResult> Index(int id)
         {
+            //RemoveStatusPending();
             var postgresContext = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
@@ -149,6 +150,7 @@ namespace MovieTicketBooking.Controllers
                 .Include(r => r.IdProekcijaNavigation)
                 .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
                 .FirstOrDefaultAsync(m => m.IdRezervacija == id);
+
             if (rezervacija == null)
             {
                 return NotFound();
@@ -157,121 +159,45 @@ namespace MovieTicketBooking.Controllers
             return View(rezervacija);
         }
 
-        // GET: Rezervacijas/Create
-        public IActionResult Create()
+        private async void RemoveStatusPending()
         {
-            ViewData["IdKorisnik"] = new SelectList(_context.Korisniks, "IdKorisnik", "Email");
-            ViewData["IdProekcija"] = new SelectList(_context.Proekcijas, "IdProekcija", "Tip");
-            return View();
-        }
-
-        // POST: Rezervacijas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdRezervacija,BrojNaSedista,Status,DatumIVreme,IdProekcija,IdKorisnik")] Rezervacija rezervacija)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(rezervacija);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdKorisnik"] = new SelectList(_context.Korisniks, "IdKorisnik", "Email", rezervacija.IdKorisnik);
-            ViewData["IdProekcija"] = new SelectList(_context.Proekcijas, "IdProekcija", "Tip", rezervacija.IdProekcija);
-            return View(rezervacija);
-        }
-
-        // GET: Rezervacijas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var rezervacija = await _context.Rezervacijas.FindAsync(id);
-            if (rezervacija == null)
-            {
-                return NotFound();
-            }
-            ViewData["IdKorisnik"] = new SelectList(_context.Korisniks, "IdKorisnik", "Email", rezervacija.IdKorisnik);
-            ViewData["IdProekcija"] = new SelectList(_context.Proekcijas, "IdProekcija", "Tip", rezervacija.IdProekcija);
-            return View(rezervacija);
-        }
-
-        // POST: Rezervacijas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRezervacija,BrojNaSedista,Status,DatumIVreme,IdProekcija,IdKorisnik")] Rezervacija rezervacija)
-        {
-            if (id != rezervacija.IdRezervacija)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(rezervacija);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RezervacijaExists(rezervacija.IdRezervacija))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdKorisnik"] = new SelectList(_context.Korisniks, "IdKorisnik", "Email", rezervacija.IdKorisnik);
-            ViewData["IdProekcija"] = new SelectList(_context.Proekcijas, "IdProekcija", "Tip", rezervacija.IdProekcija);
-            return View(rezervacija);
-        }
-
-        // GET: Rezervacijas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var rezervacija = await _context.Rezervacijas
+            var reservations = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
-                .FirstOrDefaultAsync(m => m.IdRezervacija == id);
-            if (rezervacija == null)
+                .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
+                .Where(r => r.Status.Equals("pending"))
+                .ToList();
+
+            var seats = _context.SedisteZaProekcijas
+                .Include(s => s.IdProekcijaNavigation)
+                .Include(s => s.IdRezervacijaNavigation)
+                .Where(s => s.Status.Equals("pending"))
+                .ToList();
+
+
+            foreach (var r in reservations)
             {
-                return NotFound();
+                TimeSpan difference = r.DatumIVreme - DateTime.Now;
+                double minutes = difference.Minutes;
+                if (minutes >= 10)
+                {
+                    r.Status = "cancelled";
+                    _context.Update(r);
+
+                    foreach (var s in seats)
+                    {
+                        if (s.IdRezervacija == r.IdRezervacija)
+                        {
+                            s.Status = "available";
+                            s.IdRezervacija = null;
+                            _context.Update(s);
+                        }
+                    }
+                }
+
             }
 
-            return View(rezervacija);
-        }
-
-        // POST: Rezervacijas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var rezervacija = await _context.Rezervacijas.FindAsync(id);
-            _context.Rezervacijas.Remove(rezervacija);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool RezervacijaExists(int id)
-        {
-            return _context.Rezervacijas.Any(e => e.IdRezervacija == id);
         }
     }
 }
