@@ -57,8 +57,11 @@
 
 @section Scripts {
     <script type="text/javascript">
-    window.setTimeout(function() {
-        window.location.href = '@Url.Action("Index", "Rezervacijas", new { id = int.Parse(User.Claims.ToList()[0].Value) })';
-    }, 600000);
+        var status = @Json.Serialize(Model.Status);
+        if (status == "pending") {
+                window.setTimeout(function() {
+                    window.location.href = '@Url.Action("Index", "Rezervacijas", new { id = int.Parse(User.Claims.ToList()[0].Value) })';
+                }, 600000);
+        }
     </script>
 }
