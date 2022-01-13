@@ -12,7 +12,6 @@ namespace MovieTicketBooking.Services
     public class PendingStatusRemovalService : IHostedService, IDisposable
     {
         private Timer timer;
-        private int number;
 
         private readonly postgresContext _context;
 
