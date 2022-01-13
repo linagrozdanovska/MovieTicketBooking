@@ -83,6 +83,7 @@ namespace MovieTicketBooking.Controllers
             return RedirectToAction("Details", "Rezervacijas", new { id =  res.IdRezervacija });
         }
 
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Cancel(int? id)
         {
             if (id == null)
@@ -123,11 +124,10 @@ namespace MovieTicketBooking.Controllers
             return RedirectToAction("Index", "Rezervacijas", new { id = int.Parse(User.Claims.ToList()[0].Value) });
         }
 
-        
-        // GET: Rezervacijas
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index(int id)
         {
-            //RemoveStatusPending();
+            RemoveStatusPending();
             var postgresContext = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
@@ -137,7 +137,7 @@ namespace MovieTicketBooking.Controllers
             return View(await postgresContext.ToListAsync());
         }
 
-        // GET: Rezervacijas/Details/5
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -161,24 +161,25 @@ namespace MovieTicketBooking.Controllers
 
         private async void RemoveStatusPending()
         {
-            var reservations = _context.Rezervacijas
+            var postgresContext1 = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
                 .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
-                .Where(r => r.Status.Equals("pending"))
-                .ToList();
+                .Where(r => r.Status.Equals("pending"));
+            var reservations = await postgresContext1.ToListAsync();
 
-            var seats = _context.SedisteZaProekcijas
+
+            var postgresContext2 = _context.SedisteZaProekcijas
                 .Include(s => s.IdProekcijaNavigation)
                 .Include(s => s.IdRezervacijaNavigation)
-                .Where(s => s.Status.Equals("pending"))
-                .ToList();
+                .Where(s => s.Status.Equals("pending"));
+            var seats = await postgresContext2.ToListAsync();
 
 
             foreach (var r in reservations)
             {
-                TimeSpan difference = r.DatumIVreme - DateTime.Now;
-                double minutes = difference.Minutes;
+                TimeSpan difference = DateTime.Now - r.DatumIVreme;
+                double minutes = difference.TotalMinutes;
                 if (minutes >= 10)
                 {
                     r.Status = "cancelled";

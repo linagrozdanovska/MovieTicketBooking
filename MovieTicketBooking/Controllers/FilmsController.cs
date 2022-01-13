@@ -22,30 +22,30 @@ namespace MovieTicketBooking.Controllers
         // GET: Films
         public async Task<IActionResult> Index()
         {
-            //RemoveStatusPending();
+            RemoveStatusPending();
             return View(await _context.Films.ToListAsync());
         }
 
         private async void RemoveStatusPending()
         {
-            var reservations = _context.Rezervacijas
+            var postgresContext1 = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
                 .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
-                .Where(r => r.Status.Equals("pending"))
-                .ToList();
+                .Where(r => r.Status.Equals("pending"));
+            var reservations = postgresContext1.ToList();
 
-            var seats = _context.SedisteZaProekcijas
+            var postgresContext2 = _context.SedisteZaProekcijas
                 .Include(s => s.IdProekcijaNavigation)
                 .Include(s => s.IdRezervacijaNavigation)
-                .Where(s => s.Status.Equals("pending"))
-                .ToList();
+                .Where(s => s.Status.Equals("pending"));
+            var seats = postgresContext2.ToList();
 
 
             foreach (var r in reservations)
             {
-                TimeSpan difference = r.DatumIVreme - DateTime.Now;
-                double minutes = difference.Minutes;
+                TimeSpan difference = DateTime.Now - r.DatumIVreme;
+                double minutes = difference.TotalMinutes;
                 if (minutes >= 10)
                 {
                     r.Status = "cancelled";
