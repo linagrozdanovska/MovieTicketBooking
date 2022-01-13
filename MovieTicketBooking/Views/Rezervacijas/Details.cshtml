@@ -43,10 +43,10 @@
     </dl>
     <div class="row mt-2">
         <div class="col-sm-3">
-            <a asp-action="Pay" asp-route-id="@Model.IdRezervacija" class="btn btn-primary" style="width: 5rem;">Proceed To Payment</a>
+            <a asp-controller="Plakanjes" asp-action="Create" asp-route-id="@Model.IdRezervacija" class="btn btn-primary" style="width: 10rem;">Proceed To Payment</a>
         </div>
         <div class="col-sm-3">
-            <a asp-action="Cancel" asp-route-id="@Model.IdRezervacija" class="btn btn-danger" style="width: 5rem;">Cancel Reservation</a>
+            <a asp-action="Cancel" asp-route-id="@Model.IdRezervacija" class="btn btn-danger" style="width: 10rem;">Cancel Reservation</a>
         </div>  
     </div>
     <div class="row mt-3">

@@ -1,0 +1,68 @@
+﻿@model MovieTicketBooking.Models.PaymentModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4>Payment</h4>
+
+<p class="lead">Total: @ViewData["Suma"]MKD</p>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Suma" value="@ViewData["Suma"]" />
+            <input type="hidden" asp-for="DatumIVreme" value="@ViewData["DatumIVreme"]" />
+            <input type="hidden" asp-for="IdRezervacija" value="@ViewData["IdRezervacija"]" />
+            <input type="hidden" asp-for="IdKorisnik" value="@ViewData["IdKorisnik"]" />
+            <div class="form-group">
+                <label asp-for="NacinNaPlakanje" class="control-label"></label>
+                <select asp-for="NacinNaPlakanje" class="form-control">
+                    <option value="credit card">Credit Card</option>
+                    <option value="debit card">Debit Card</option>
+                </select>
+                <span asp-validation-for="NacinNaPlakanje" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NameOnCard" class="control-label"></label>
+                <input asp-for="NameOnCard" class="form-control" placeholder="John More Doe">
+                <span asp-validation-for="NameOnCard" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CCNumber" class="control-label"></label>
+                <input asp-for="CCNumber" placeholder="1111-2222-3333-4444" class="form-control">
+                <span asp-validation-for="CCNumber" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-4 form-group">
+                    <label asp-for="ExpMonth" class="control-label"></label>
+                    <input asp-for="ExpMonth" placeholder="12" class="form-control">
+                    <span asp-validation-for="ExpMonth" class="text-danger"></span>
+                </div>
+                <div class="col-4 form-group">
+                    <label asp-for="ExpYear" class="control-label"></label>
+                    <input asp-for="ExpYear" placeholder="2022" class="form-control">
+                    <span asp-validation-for="ExpYear" class="text-danger"></span>
+                </div>
+                <div class="col-4 form-group">
+                    <label asp-for="CVV" class="control-label"></label>
+                    <input asp-for="CVV" placeholder="352" class="form-control">
+                    <span asp-validation-for="CVV" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Rezervacijas" asp-action="Index">Back To Reservations</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

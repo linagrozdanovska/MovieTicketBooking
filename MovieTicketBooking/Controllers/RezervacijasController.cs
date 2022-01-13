@@ -83,7 +83,6 @@ namespace MovieTicketBooking.Controllers
             return RedirectToAction("Details", "Rezervacijas", new { id =  res.IdRezervacija });
         }
 
-        //Cancel
         public async Task<IActionResult> Cancel(int? id)
         {
             if (id == null)
@@ -124,6 +123,7 @@ namespace MovieTicketBooking.Controllers
             return RedirectToAction("Index", "Rezervacijas", new { id = int.Parse(User.Claims.ToList()[0].Value) });
         }
 
+        
         // GET: Rezervacijas
         public async Task<IActionResult> Index(int id)
         {
@@ -131,7 +131,8 @@ namespace MovieTicketBooking.Controllers
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
                 .Include(r => r.IdProekcijaNavigation.IdFilmNavigation)
-                .Where(r => r.IdKorisnik == id);
+                .Where(r => r.IdKorisnik == id)
+                .OrderByDescending(r => r.DatumIVreme);
             return View(await postgresContext.ToListAsync());
         }
 

@@ -6,6 +6,10 @@
 
 <h1>My Reservations</h1>
 
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -54,11 +58,15 @@
             @if (item.Status.Equals("pending"))
             {
                 <td class="text-right col-4">
-                    <a asp-action="Pay" asp-route-id="@item.IdRezervacija" class="btn btn-primary">Proceed To Payment</a>
+                    <a asp-controller="Plakanjes" asp-action="Create" asp-route-id="@item.IdRezervacija" class="btn btn-primary">Proceed To Payment</a>
                     <a asp-action="Cancel" asp-route-id="@item.IdRezervacija" class="btn btn-danger">Cancel Reservation</a>
                 </td>
             }
-            </tr>
+            else
+            {
+                <td class="text-right col-4"></td>
+            }
+        </tr>
 }
     </tbody>
 </table>
