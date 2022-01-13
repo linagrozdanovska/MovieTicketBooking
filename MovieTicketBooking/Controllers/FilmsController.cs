@@ -22,11 +22,11 @@ namespace MovieTicketBooking.Controllers
         // GET: Films
         public async Task<IActionResult> Index()
         {
-            RemoveStatusPending();
+            await RemoveStatusPendingAsync();
             return View(await _context.Films.OrderByDescending(f => f.DatumNaIzdavanje).ToListAsync());
         }
 
-        private async void RemoveStatusPending()
+        private async Task RemoveStatusPendingAsync()
         {
             var postgresContext1 = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)

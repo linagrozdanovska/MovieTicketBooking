@@ -26,6 +26,12 @@ namespace MovieTicketBooking.Controllers
                 .Include(p => p.IdSalaNavigation)
                 .Where(p => p.IdFilm == id)
                 .OrderByDescending(p => p.Datum);
+            var movie = "";
+            foreach(var p in postgresContext)
+            {
+                movie = p.IdFilmNavigation.Naslov;
+            }
+            ViewData["Movie"] = movie;
             return View(await postgresContext.ToListAsync());
         }
 

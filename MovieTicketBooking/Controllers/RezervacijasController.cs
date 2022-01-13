@@ -127,7 +127,7 @@ namespace MovieTicketBooking.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index(int id)
         {
-            RemoveStatusPending();
+            await RemoveStatusPendingAsync();
             var postgresContext = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
                 .Include(r => r.IdProekcijaNavigation)
@@ -159,7 +159,7 @@ namespace MovieTicketBooking.Controllers
             return View(rezervacija);
         }
 
-        private async void RemoveStatusPending()
+        private async Task RemoveStatusPendingAsync()
         {
             var postgresContext1 = _context.Rezervacijas
                 .Include(r => r.IdKorisnikNavigation)
